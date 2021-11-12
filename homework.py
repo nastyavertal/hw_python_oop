@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import ClassVar
 
 
 @dataclass
@@ -25,9 +26,9 @@ class Training:
     duration: float
     weight: float
 
-    M_IN_KM = 1000
-    H_IN_M = 60
-    LEN_STEP = 0.65
+    M_IN_KM: ClassVar[int] = 1000
+    H_IN_M: ClassVar[int] = 60
+    LEN_STEP: ClassVar[float] = 0.65
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
@@ -58,8 +59,8 @@ class Training:
 @dataclass
 class Running(Training):
     """Тренировка: бег."""
-    COEFF_FOR_RUN = 18
-    COEFF_FOR_RUN_2 = 20
+    COEFF_FOR_RUN: ClassVar[int] = 18
+    COEFF_FOR_RUN_2: ClassVar[int] = 20
 
     def get_spent_calories(self) -> float:
         calories = ((self.COEFF_FOR_RUN * self.get_mean_speed()
@@ -71,9 +72,8 @@ class Running(Training):
 @dataclass
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    COEFF_FOR_WALK = 0.035
-    COEFF_FOR_WALK_2 = 0.029
-
+    COEFF_FOR_WALK: ClassVar[float] = 0.035
+    COEFF_FOR_WALK_2: ClassVar[float] = 0.029
     height: int
 
     def get_spent_calories(self) -> float:
@@ -90,9 +90,9 @@ class Swimming(Training):
     count_pool: float
     length_pool: float
 
-    LEN_STEP = 1.38
-    FIRST_COEFF_FOR_SWIM = 1.1
-    SECOND_COEFF_FOR_SWIM = 2
+    LEN_STEP: ClassVar[float] = 1.38
+    FIRST_COEFF_FOR_SWIM: ClassVar[float] = 1.1
+    SECOND_COEFF_FOR_SWIM: ClassVar[int] = 2
 
     def get_mean_speed(self) -> float:
         speed = (self.length_pool * self.count_pool
@@ -112,10 +112,9 @@ def read_package(workout_type: str, data: list) -> Training:
                 'WLK': SportsWalking}
     if workout_type not in workouts:
         raise KeyError('неверный тип тренировки')
-    elif len(data) > 5:
+    if len(data) > 5:
         raise TypeError('передано неверное количество аргументов')
-    else:
-        return workouts[workout_type](*data)
+    return workouts[workout_type](*data)
 
 
 def main(training: Training) -> None:
